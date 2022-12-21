@@ -27,8 +27,13 @@ public class Server {
         app.start(5000);
 
         app.get(apiPrefix + "/news", ctx -> {
-            String json = articleManager.getArticlesAsJsonString();
-            ctx.header("Content-type", "application/json").json(json);
+            if(articleManager.numberOfArticles() > 0){
+                String json = articleManager.getArticlesAsJsonString();
+                ctx.header("Content-type", "application/json").json(json);
+            } else {
+                ctx.status(404);
+            }
+
         });
 
         app.get(apiPrefix + "/news?category={category}", ctx -> {

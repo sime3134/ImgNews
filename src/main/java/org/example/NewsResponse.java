@@ -7,8 +7,9 @@ public class NewsResponse {
     private String totalResults;
     private ArrayList<OriginalArticle> articles;
 
-    public OriginalArticle getFirstArticle(){
-        return articles.get(0);
+    public OriginalArticle getArticle(int index){
+        if(index >= articles.size()) throw new IllegalArgumentException("Index out of bounds");
+        return articles.get(index);
     }
 
     @Override
@@ -18,5 +19,9 @@ public class NewsResponse {
                 ", totalResults='" + totalResults + '\'' +
                 ", articles=" + articles +
                 '}';
+    }
+
+    public int getNumberOfArticles() {
+        return articles.size();
     }
 }

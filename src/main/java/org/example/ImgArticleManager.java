@@ -10,31 +10,42 @@ import java.util.List;
 
 public class ImgArticleManager {
     private final Mapper mapper;
+    private final Blacklist blacklist;
     private final HttpClient httpClient;
     private final List<ImgArticle> articles;
 
-    private static final String imgSize = "512x512";
+    private static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general", "entertainment", "sports" };
+    private static final int IMAGES_PER_ARTICLE = 5;
+
+    private static final String TITLE_IMG_SIZE = "256x256";
+    private static final String OTHER_IMGS_SIZE = "256x256";
 
     public ImgArticleManager(){
         articles = new ArrayList<>();
         mapper = new Mapper();
         httpClient = new HttpClient();
+        blacklist = new Blacklist();
     }
 
     public void prepareArticles() {
-        OriginalArticle originalArticle = getNews();
-        createImgArticles(originalArticle, getGeneratedImages(originalArticle));
+        for(String category : ARTICLES_TO_GET_BY_ARTICLE){
+            OriginalArticle originalArticle = getNews(category);
+            articles.add(createImgArticles(originalArticle, getGeneratedImages(originalArticle)));
+        }
     }
 
-    private void createImgArticles(OriginalArticle originalArticle, List<GeneratedImage> generatedImages) {
-        ImgArticle imgArticle = new ImgArticle(originalArticle, generatedImages);
-        articles.add(imgArticle);
+    private ImgArticle createImgArticles(OriginalArticle originalArticle, List<GeneratedImage> generatedImages) {
+        return new ImgArticle(originalArticle, generatedImages);
     }
 
     private List<GeneratedImage> getGeneratedImages(OriginalArticle originalArticle) {
+        System.out.println(originalArticle);
         ArrayList<GeneratedImage> images = new ArrayList<>();
-        images.add(getImageFromDalle(originalArticle.getTitle()));
-        images.add(getImageFromDalle(originalArticle.getDescription()));
+        images.add(getImageFromDalle(TITLE_IMG_SIZE, originalArticle.getTitle()));
+        for(int i = 0; i < IMAGES_PER_ARTICLE; i++){
+            images.add(getImageFromDalle(OTHER_IMGS_SIZE,
+                    originalArticle.getFusedDescAndContentAsArray(IMAGES_PER_ARTICLE)[i]));
+        }
 
         for(GeneratedImage image : images){
             System.out.println(image.getUrl());
@@ -44,7 +55,7 @@ public class ImgArticleManager {
     }
 
     @NotNull
-    private GeneratedImage getImageFromDalle(String searchPrompt) {
+    private GeneratedImage getImageFromDalle(String imgSize, String searchPrompt) {
         String json = "";
         System.out.println(searchPrompt);
         DallePrompt dallePrompt = new DallePrompt(searchPrompt, 1, imgSize);
@@ -52,7 +63,7 @@ public class ImgArticleManager {
 
         Request request = new Request.Builder()
                 .url("https://api.openai.com/v1/images/generations")
-                .addHeader("Authorization", "Bearer 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")
+                .addHeader("Authorization", "Bearer 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")
                 .addHeader("Content-Type", "application/json")
                 .post(RequestBody.create(jsonRequest, MediaType.get("application/json; charset=utf-8")))
                 .build();
@@ -67,25 +78,43 @@ public class ImgArticleManager {
         return dalleResponse.getData()[0];
     }
 
-    private OriginalArticle getNews() {
+    private OriginalArticle getNews(String category) {
+        int articleIndex = 0;
+        OriginalArticle article = null;
         String json = "";
+
         Request request = new Request.Builder()
-                .url("https://newsapi.org/v2/top-headlines?country=se")
+                .url("https://newsapi.org/v2/top-headlines?country=se&category=" + category)
                 .addHeader("Accept", "application/json")
                 .addHeader("X-Api-Key", "7c34b62c6d744276a8b8c83a2875fc9f")
                 .build();
         try {
             json = httpClient.get(request);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         NewsResponse responseObj = mapper.fromJsonString(json, NewsResponse.class);
+        System.out.println(responseObj);
+        boolean blacklisted = true;
+        while(blacklisted){
+            if(responseObj.getNumberOfArticles() > articleIndex) {
+                article = responseObj.getArticle(articleIndex);
+                blacklisted = blacklist.containsBlacklisted(article, IMAGES_PER_ARTICLE);
+                articleIndex++;
+            }else{
+                getNews(category);
+            }
+        }
 
-        return responseObj.getFirstArticle();
+        return article.setCategory(category);
     }
 
     public String getArticlesAsJsonString() {
         return mapper.toJsonString(articles, List.class);
+    }
+
+    public int numberOfArticles() {
+        return articles.size();
     }
 }
