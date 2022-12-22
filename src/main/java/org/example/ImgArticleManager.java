@@ -11,6 +11,8 @@ import java.util.List;
 public class ImgArticleManager {
     private final Mapper mapper;
     private final Blacklist blacklist;
+
+    private final KeyHandler keyHandler;
     private final HttpClient httpClient;
     private final List<ImgArticle> articles;
 
@@ -23,6 +25,7 @@ public class ImgArticleManager {
     public ImgArticleManager(){
         articles = new ArrayList<>();
         mapper = new Mapper();
+        keyHandler = new KeyHandler();
         httpClient = new HttpClient();
         blacklist = new Blacklist();
     }
@@ -57,13 +60,14 @@ public class ImgArticleManager {
     @NotNull
     private GeneratedImage getImageFromDalle(String imgSize, String searchPrompt) {
         String json = "";
+        searchPrompt = searchPrompt.replaceAll("[:]", "");
         System.out.println(searchPrompt);
         DallePrompt dallePrompt = new DallePrompt(searchPrompt, 1, imgSize);
         String jsonRequest = mapper.toJsonString(dallePrompt, DallePrompt.class);
 
         Request request = new Request.Builder()
                 .url("https://api.openai.com/v1/images/generations")
-                .addHeader("Authorization", "Bearer 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")
+                .addHeader("Authorization", keyHandler.get("openai"))
                 .addHeader("Content-Type", "application/json")
                 .post(RequestBody.create(jsonRequest, MediaType.get("application/json; charset=utf-8")))
                 .build();
@@ -86,7 +90,7 @@ public class ImgArticleManager {
         Request request = new Request.Builder()
                 .url("https://newsapi.org/v2/top-headlines?country=se&category=" + category)
                 .addHeader("Accept", "application/json")
-                .addHeader("X-Api-Key", "7c34b62c6d744276a8b8c83a2875fc9f")
+                .addHeader("X-Api-Key", keyHandler.get("newsapi"))
                 .build();
         try {
             json = httpClient.get(request);
