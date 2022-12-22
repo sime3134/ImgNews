@@ -5,6 +5,8 @@ public class DallePrompt {
     private int n;
     private String size;
 
+    private final String response_format = "b64_json";
+
     public DallePrompt(String prompt, int n, String size){
         this.prompt = prompt;
         this.n = n;

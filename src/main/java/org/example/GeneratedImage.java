@@ -1,9 +1,9 @@
 package org.example;
 
 public class GeneratedImage {
-    private String url;
+    private String b64_json;
 
-    public String getUrl() {
-        return url;
+    public String getData() {
+        return b64_json;
     }
 }

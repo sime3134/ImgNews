@@ -16,8 +16,9 @@ public class ImgArticleManager {
     private final HttpClient httpClient;
     private final List<ImgArticle> articles;
 
-    private static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general", "entertainment", "sports" };
-    private static final int IMAGES_PER_ARTICLE = 5;
+    //private static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general", "entertainment", "sports" };
+    private static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general" };
+    private static final int IMAGES_PER_ARTICLE = 1;
 
     private static final String TITLE_IMG_SIZE = "256x256";
     private static final String OTHER_IMGS_SIZE = "256x256";
@@ -51,7 +52,7 @@ public class ImgArticleManager {
         }
 
         for(GeneratedImage image : images){
-            System.out.println(image.getUrl());
+            System.out.println(image.getData());
         }
 
         return images;
@@ -60,7 +61,6 @@ public class ImgArticleManager {
     @NotNull
     private GeneratedImage getImageFromDalle(String imgSize, String searchPrompt) {
         String json = "";
-        searchPrompt = searchPrompt.replaceAll("[:]", "");
         System.out.println(searchPrompt);
         DallePrompt dallePrompt = new DallePrompt(searchPrompt, 1, imgSize);
         String jsonRequest = mapper.toJsonString(dallePrompt, DallePrompt.class);
