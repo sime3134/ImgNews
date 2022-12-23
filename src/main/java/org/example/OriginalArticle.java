@@ -1,14 +1,11 @@
 package org.example;
 
-import java.util.Arrays;
-
 public class OriginalArticle {
     private String title;
     private String name;
     private String author;
     private String description;
     private String content;
-
     private String category;
     private OriginalArticleSource source;
     public String getTitle() {
@@ -36,27 +33,16 @@ public class OriginalArticle {
         return description;
     }
 
-    public String[] getFusedDescAndContentAsArray(int limit){
-        String fused = description + " " + content;
-        String[] array = fused.split("[.]", limit);
-        System.out.println(Arrays.toString(array));
-        return array;
-    }
-
-    public String getFusedDescAndContent(int limit){
-        return description + " " + content;
-    }
-
     public String getContent() {
         return content;
     }
 
-    public OriginalArticleSource getSource() {
-        return source;
+    public String[] getContentAsArray(int limit) {
+        return content.split("[.,]", limit + 1);
     }
 
-    public OriginalArticle(){
-
+    public OriginalArticleSource getSource() {
+        return source;
     }
 
     @Override

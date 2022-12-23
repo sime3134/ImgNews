@@ -1,6 +1,6 @@
 package org.example;
 
-public class DalleResponse {
+public class DalleImageResponse {
     private int created;
     private GeneratedImage[] data;
 

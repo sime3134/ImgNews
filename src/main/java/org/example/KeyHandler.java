@@ -12,7 +12,6 @@ public class KeyHandler {
     public KeyHandler(){
         keys = new HashMap<>();
         readKeys();
-        System.out.println(keys);
     }
 
     public String get(String key){
