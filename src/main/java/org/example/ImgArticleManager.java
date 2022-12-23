@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ImgArticleManager {
     private final Mapper mapper;
@@ -14,7 +15,8 @@ public class ImgArticleManager {
     private final HttpClient httpClient;
     private final List<ImgArticle> articles;
 
-    private static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general", "entertainment", "sports" };
+    public static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general", "entertainment", "sports" };
+    //public static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general" };
     private static final int IMAGES_PER_ARTICLE = 5;
 
     private static final String TITLE_IMG_SIZE = "256x256";
@@ -129,8 +131,25 @@ public class ImgArticleManager {
         return !dalleCompletionResponse.getChoice().getText().contains("No, ");
     }
 
+
+
     public String getArticlesAsJsonString() {
         return mapper.toJsonString(articles, List.class);
+    }
+
+    public String getArticleByIdAsJsonString(int id) {
+        Optional<ImgArticle> article = articles.stream().filter(art -> art.getId() == id).findAny();
+        return article.map(imgArticle -> mapper.toJsonString(imgArticle, ImgArticle.class)).orElse(null);
+    }
+
+    public String getArticlesAsJsonString(String category) {
+        List<ImgArticle> articlesCategory =
+                articles.stream().filter(article -> article.getOriginalArticle().getCategory().equals(category)).toList();
+        if(!articlesCategory.isEmpty()) {
+            return mapper.toJsonString(articlesCategory, List.class);
+        }else{
+            return null;
+        }
     }
 
     public int numberOfArticles() {

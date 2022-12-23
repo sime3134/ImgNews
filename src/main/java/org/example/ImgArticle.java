@@ -9,6 +9,14 @@ public class ImgArticle {
     private List<String> imgData;
     private OriginalArticle originalArticle;
 
+    public OriginalArticle getOriginalArticle() {
+        return originalArticle;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public ImgArticle(OriginalArticle originalArticle, List<GeneratedImage> generatedImages){
         id = nextId;
         nextId++;

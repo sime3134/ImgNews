@@ -1,6 +1,8 @@
 package org.example;
 
 import io.javalin.Javalin;
+import io.javalin.http.InternalServerErrorResponse;
+import io.javalin.http.NotFoundResponse;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 
 public class Server {
@@ -26,22 +28,60 @@ public class Server {
 
         app.start(5000);
 
-        app.get(apiPrefix + "/news", ctx -> {
+        app.get(apiPrefix + "/news?category={category}", ctx -> {
+            System.out.println(ctx.pathParam("category"));
             if(articleManager.numberOfArticles() > 0){
-                String json = articleManager.getArticlesAsJsonString();
-                ctx.header("Content-type", "application/json").json(json);
+                String json = articleManager.getArticlesAsJsonString(ctx.pathParam("category"));
+                if(json != null) {
+                    ctx.header("Content-type", "application/json").json(json);
+                }else{
+                    throw new NotFoundResponse();
+                }
             } else {
-                ctx.status(404);
+                throw new InternalServerErrorResponse();
             }
-
         });
 
-        app.get(apiPrefix + "/news?category={category}", ctx -> {
-
+        app.get(apiPrefix + "/news", ctx -> {
+            String json;
+            if(articleManager.numberOfArticles() > 0){
+                if(ctx.queryParam("category") != null){
+                    json = articleManager.getArticlesAsJsonString(ctx.queryParam("category"));
+                    if(json != null) {
+                        ctx.header("Content-type", "application/json").json(json);
+                    }else{
+                        throw new NotFoundResponse("Couldn't find the requested category");
+                    }
+                }else {
+                    json = articleManager.getArticlesAsJsonString();
+                    ctx.header("Content-type", "application/json").json(json);
+                }
+            } else {
+                throw new InternalServerErrorResponse();
+            }
         });
 
         app.get(apiPrefix + "/news/{id}", ctx -> {
-
+            if(articleManager.numberOfArticles() > 0){
+                Integer id = null;
+                try {
+                    id = Integer.parseInt(ctx.pathParam("id"));
+                }catch(NumberFormatException e){
+                    e.printStackTrace();
+                }
+                if(id != null) {
+                    String json = articleManager.getArticleByIdAsJsonString(id);
+                    if (json != null) {
+                        ctx.header("Content-type", "application/json").json(json);
+                    } else {
+                        throw new NotFoundResponse("Couldn't find the requested article");
+                    }
+                }else{
+                    throw new InternalServerErrorResponse();
+                }
+            } else {
+                throw new InternalServerErrorResponse();
+            }
         });
     }
 }
