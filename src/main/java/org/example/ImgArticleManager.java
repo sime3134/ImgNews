@@ -17,11 +17,17 @@ public class ImgArticleManager {
     private final KeyHandler keyHandler;
     private final HttpClient httpClient;
     private final List<ImgArticle> articles;
-
+    
     //public static final String[] articleToGetByCategory = { "general", "entertainment", "sports" };
     public final String[] articleToGetByCategory = { "general", "entertainment" };
     private final int imgsPerArticle = 1;
     private final String imgSize = "256x256";
+    public static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general", "entertainment", "sports" };
+    //public static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general", "entertainment" };
+    private static final int IMAGES_PER_ARTICLE = 5;
+
+    private static final String TITLE_IMG_SIZE = "256x256";
+    private static final String OTHER_IMGS_SIZE = "256x256";
 
     public ImgArticleManager(){
         articles = new ArrayList<>();

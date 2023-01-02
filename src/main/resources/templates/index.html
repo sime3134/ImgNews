@@ -62,12 +62,12 @@
         
         <nav class="navbar navbar-expand-lg" id="nav">
             <div class="container-fluid">
-                <a class="navbar-brand" href="index.html">HEM</a>  
+                <a class="navbar-brand" href="/news">HEM</a>  
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">            
                     <ul class="navbar-nav me-auto">
-                        <a class="nav-link ms-5" href="news.html">Allmänt</a>
-                        <a class="nav-link ms-5" href="news.html">Sport</a>
-                        <a class="nav-link ms-5" href="news.html">Nöje</a>
+                        <a class="nav-link ms-5" id=" " href="">Allmänt</a>
+                        <a class="nav-link ms-5" id=" " href=" ">Sport</a>
+                        <a class="nav-link ms-5" id=" " href=" ">Nöje</a>
                     </ul>
                 </div>
             </div>        
@@ -78,18 +78,18 @@
             <div class="container text-center">
                 <div class="row">
                     <div class="col-4" id="startone">
-                        <a href="news.html"><img src= "" id = "newsImg" class="startPic"></a>
+                        <a  id="one" href= " " > <img src= "" id = "newsImg" class="startPic"></a>
                         <h4 id="newsTitle1"> </h4>
                     </div>
 
                     <div class="col-4" id="starttwo">
-                        <a href="news.html"><img src=" " id = "newsImg2" class="startPic"> </a>
-                        <h4>Sport</h4>
+                        <a id= "two" href=" "><img src=" " id = "newsImg2" class="startPic"> </a>
+                        <h4 id= "newsTitle2"> </h4>
                     </div>
 
                     <div class="col-4" id="startthree">
-                        <a href="news.html"><img src=" " id = "newsImg3" class="startPic"> </a>
-                        <h4>Nöje</h4>
+                        <a id="three" href=" "><img src=" " id = "newsImg3" class="startPic"> </a>
+                        <h4 id="newsTitle3"> </h4>
                     </div>
                 </div>
             </div>
@@ -102,22 +102,37 @@
 
 
         <script>
+
+            
          
             fetch('http://localhost:5000/api/v1/news')
               .then(response => response.json())
               .then(data => {
-                console.log(data);
+                console.log(Object.keys(data).length);
+                
+                
                 const newsImg = "data:image/png;base64," + data[0].imgData[0];
                 const newsImg2 = "data:image/png;base64," + data[1].imgData[0];
                 const newsImg3 = "data:image/png;base64," + data[2].imgData[0];
+                
                 document.getElementById('newsImg').src = newsImg;
                 document.getElementById('newsImg2').src = newsImg2;
                 document.getElementById('newsImg3').src = newsImg3;
 
-                const newsTitle = data[0].originalArticle.title;
-                document.getElementById('newsTitle1').src = newsImg;
-                
+                document.getElementById("newsTitle1").innerHTML= data[0].originalArticle.title;
+                document.getElementById("newsTitle2").innerHTML= data[1].originalArticle.title;
+                document.getElementById("newsTitle3").innerHTML= data[2].originalArticle.title;
+
+                document.getElementById("one").href= "news/" + data[0].id;
+                document.getElementById("two").href= "news/" + data[1].id;
+                document.getElementById("three").href= "news/" + data[2].id;
+
+
+
+
               });
+
+
           </script>
         
     </body>
