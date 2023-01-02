@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+/**
+ * This class is used to handle the keybindings for the program.
+ */
 public class KeyHandler {
     private final HashMap<String, String> keys;
 

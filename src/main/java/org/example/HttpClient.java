@@ -4,6 +4,9 @@ import okhttp3.*;
 
 import java.io.IOException;
 
+/**
+ * This class is used to handle the HTTP requests.
+ */
 public class HttpClient {
     private final OkHttpClient client;
 

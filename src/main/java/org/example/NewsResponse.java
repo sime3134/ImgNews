@@ -2,6 +2,9 @@ package org.example;
 
 import java.util.ArrayList;
 
+/**
+ * This class represents a response from the News API.
+ */
 public class NewsResponse {
     private String status;
     private String totalResults;

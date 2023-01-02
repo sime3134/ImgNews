@@ -3,24 +3,25 @@ package org.example;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Create and store all ImgArticles.
+ * All API calls to other API:s are also handled here.
+ */
 public class ImgArticleManager {
     private final Mapper mapper;
     private final KeyHandler keyHandler;
     private final HttpClient httpClient;
     private final List<ImgArticle> articles;
 
-    //public static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general", "entertainment", "sports" };
-    public static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general", "entertainment" };
-    private static final int IMAGES_PER_ARTICLE = 1;
-
-    private static final String TITLE_IMG_SIZE = "256x256";
-    private static final String OTHER_IMGS_SIZE = "256x256";
+    //public static final String[] articleToGetByCategory = { "general", "entertainment", "sports" };
+    public final String[] articleToGetByCategory = { "general", "entertainment" };
+    private final int imgsPerArticle = 1;
+    private final String imgSize = "256x256";
 
     public ImgArticleManager(){
         articles = new ArrayList<>();
@@ -30,7 +31,7 @@ public class ImgArticleManager {
     }
 
     public void prepareArticles() {
-        for(String category : ARTICLES_TO_GET_BY_ARTICLE){
+        for(String category : articleToGetByCategory){
             OriginalArticle originalArticle = getNews(category);
             articles.add(createImgArticles(originalArticle, getGeneratedImages(originalArticle)));
         }
@@ -42,17 +43,21 @@ public class ImgArticleManager {
 
     private List<GeneratedImage> getGeneratedImages(OriginalArticle originalArticle) {
         ArrayList<GeneratedImage> images = new ArrayList<>();
-        String[] contents = originalArticle.getContentAsArray(IMAGES_PER_ARTICLE);
-        images.add(getImageFromDalle(TITLE_IMG_SIZE, originalArticle.getTitle()));
+        String[] contents = originalArticle.getContentAsArray(imgsPerArticle);
+        images.add(getImageFromDalle(originalArticle.getTitle()));
         for (String content : contents) {
-            images.add(getImageFromDalle(OTHER_IMGS_SIZE, content));
+            images.add(getImageFromDalle(content));
         }
 
         return images;
     }
 
-    @NotNull
-    private GeneratedImage getImageFromDalle(String imgSize, String searchPrompt) {
+    /**
+     * Requests 1 image from the OPENAI API.
+     * @param searchPrompt The text prompt to generate the image from.
+     * @return The generated image.
+     */
+    private GeneratedImage getImageFromDalle(String searchPrompt) {
         String json = "";
         System.out.println("        Generating image from prompt: " + searchPrompt);
         DalleImagePrompt dalleImagePrompt = new DalleImagePrompt(searchPrompt, 1, imgSize);
@@ -75,6 +80,13 @@ public class ImgArticleManager {
         return dalleImageResponse.getData()[0];
     }
 
+    /**
+     * Requests 1 article from the NEWS API. If a retrieved article contains anything
+     * related to violence, celebrities or COVID-19 a new article will be retrieved.
+     * See {@link #checkArticleWithDalle(OriginalArticle)} for details about this.
+     * @param category The category of the article to retrieve.
+     * @return The retrieved article.
+     */
     private OriginalArticle getNews(String category) {
         int articleIndex = -1;
         OriginalArticle article = null;
@@ -108,6 +120,11 @@ public class ImgArticleManager {
         return article.setCategory(category);
     }
 
+    /**
+     * Asks the OPENAI API if the article contains anything related to violence, celebrities or COVID-19.
+     * @param article The article to check.
+     * @return true if the article contains anything related to violence, celebrities or COVID-19, else false.
+     */
     private boolean checkArticleWithDalle(OriginalArticle article) {
         String json = "";
         DalleCompletionPrompt dalleCompletionPrompt = new DalleCompletionPrompt(article);

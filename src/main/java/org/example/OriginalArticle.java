@@ -1,5 +1,8 @@
 package org.example;
 
+/**
+ * This class represents the original article from the NEWS API.
+ */
 public class OriginalArticle {
     private String title;
     private String name;

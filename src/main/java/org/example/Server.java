@@ -6,6 +6,11 @@ import io.javalin.http.NotFoundResponse;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import io.javalin.rendering.template.JavalinThymeleaf;
 
+import java.util.Map;
+
+/**
+ * Asks the ImgArticleManager to generate ImgArticles and serves them in JSON or HTML format.
+ */
 public class Server {
 
     private final ImgArticleManager articleManager;
@@ -16,6 +21,10 @@ public class Server {
         articleManager.prepareArticles();
     }
 
+    /**
+     * Starts the server that both serves HTML templates with the thymeleaf library and
+     * answers API replies with ImgArticles in the JSON format.
+     */
     public void run() {
         Javalin app = Javalin.create(config -> {
             JavalinThymeleaf.init();
@@ -29,6 +38,7 @@ public class Server {
 
         app.start(5000);
 
+        //Serves all news or all news for a specific category if it is specified in a query.
         app.get(apiPrefix + "/news", ctx -> {
             String json;
             if(articleManager.numberOfArticles() > 0){
@@ -48,6 +58,7 @@ public class Server {
             }
         });
 
+        //Serves an article specified with an ID or a NotFoundResponse if not article was found.
         app.get(apiPrefix + "/news/{id}", ctx -> {
             if(articleManager.numberOfArticles() > 0){
                 Integer id = null;
@@ -78,7 +89,9 @@ public class Server {
         });
 
         app.get("/news/{id}", ctx -> {
-            ctx.render("/templates/news.html");
+            Map<String, String> model = Map.of("json",
+                    articleManager.getArticleByIdAsJsonString(Integer.parseInt(ctx.pathParam("id"))));
+            ctx.render("/templates/news.html", model);
         });
 
     }

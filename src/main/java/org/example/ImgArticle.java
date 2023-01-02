@@ -3,6 +3,9 @@ package org.example;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the finished article made out of images.
+ */
 public class ImgArticle {
     private static int nextId;
     private final int id;

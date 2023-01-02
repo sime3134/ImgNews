@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
 
+/**
+ * This class is used to convert between JSON and Java objects.
+ */
 public class Mapper {
     private final Gson gson;
     public Mapper(){
