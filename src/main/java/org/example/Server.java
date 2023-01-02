@@ -31,7 +31,7 @@ public class Server {
             config.plugins.enableCors(corsContainer -> {
                 corsContainer.add(CorsPluginConfig::anyHost);
             });
-            config.staticFiles.add("/public/static");
+            config.staticFiles.add("/public");
         });
 
         //API endpoints
@@ -84,15 +84,40 @@ public class Server {
 
         //Templates
 
-        app.get("/news", ctx -> {
-            ctx.render("/templates/index.html");
-        });
-
         app.get("/news/{id}", ctx -> {
-            Map<String, String> model = Map.of("json",
-                    articleManager.getArticleByIdAsJsonString(Integer.parseInt(ctx.pathParam("id"))));
-            ctx.render("/templates/news.html", model);
+            if(articleManager.numberOfArticles() > 0){
+                Integer id = null;
+                try {
+                    id = Integer.parseInt(ctx.pathParam("id"));
+                }catch(NumberFormatException e){
+                    e.printStackTrace();
+                }
+                if(id != null) {
+                    Map<String, String> model = Map.of("json",
+                            articleManager.getArticleByIdAsJsonString(id));
+                    ctx.render("/templates/news.html", model);
+                }else{
+                    throw new InternalServerErrorResponse();
+                }
+            } else {
+                throw new InternalServerErrorResponse();
+            }
         });
 
+        app.get("/news", ctx -> {
+            String json;
+            if(articleManager.numberOfArticles() > 0){
+                if(ctx.queryParam("category") != null){
+                    json = articleManager.getArticlesAsJsonString(ctx.queryParam("category"));
+                }else {
+                    json = articleManager.getArticlesAsJsonString();
+                }
+            } else {
+                throw new InternalServerErrorResponse();
+            }
+            Map<String, String> model = Map.of("json",
+                    json);
+            ctx.render("/templates/index.html", model);
+        });
     }
 }
