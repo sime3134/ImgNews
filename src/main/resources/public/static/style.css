@@ -1,0 +1,92 @@
+
+body {
+    background-color: rgba(230, 230, 223, 0.521);
+}
+
+
+header {
+    margin: 0;
+    padding:0;
+}
+
+h1, a {
+    text-decoration: none;
+    text-align: center;
+    padding: 50px 0 40px 0;
+    text-transform: uppercase;
+    font-size: 40px;  
+    color: rgb(0, 66, 128);
+    font-family: 'Raleway', sans-serif;
+    margin:0;
+}
+
+h2, p {
+    text-align: center;
+    padding: 80px 0 20px 0;
+    text-transform: uppercase;
+    color: rgb(0, 66, 128);
+    font-family: 'Raleway', sans-serif;
+    margin:0;
+}
+h4 {
+    text-align: center;
+    padding: 10px 0 20px 0;
+    text-transform: uppercase;
+    color: rgb(0, 66, 128);
+    font-family: 'Raleway', sans-serif;
+}
+
+.container-fluid{
+    margin-left: 5%; 
+    margin-right: 15%;
+    
+}
+nav {
+    border-bottom: 1px rgba(0, 66, 128, 0.384) solid;  
+    border-top: 1px rgba(0, 66, 128, 0.384) solid; 
+    margin: 0;
+    height: 60px;
+    
+}
+
+a:hover {
+    color: black;
+    /*font-size: 20px;*/
+    
+    text-shadow: 1px 1px 2px rgba(24, 24, 24, 0.278);
+
+}
+
+ 
+
+#news {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+#startone, #starttwo
+{
+    border-right: 2px rgba(0, 66, 128, 0.384) solid;
+}
+
+.row {
+   padding-bottom: 13px;
+    /* padding-top: 5%;*/
+    /*border-bottom: 2px rgba(0, 66, 128, 0.384) solid; */
+}
+.startPic {
+    width: 250px;
+}
+.startPic:hover {
+    box-shadow: 11px 12px 22px -8px rgba(0, 0, 0, 0.278);
+}
+.newsPic{
+    width: 170px;
+}
+
+
+#footer {
+    border-top: 1px rgba(162, 162, 157, 0.596) solid;
+    margin: 0;
+    /*background-color: rgba(230, 230, 223, 0.377);*/
+}

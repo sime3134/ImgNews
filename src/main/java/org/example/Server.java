@@ -4,6 +4,7 @@ import io.javalin.Javalin;
 import io.javalin.http.InternalServerErrorResponse;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.plugin.bundled.CorsPluginConfig;
+import io.javalin.rendering.template.JavalinThymeleaf;
 
 public class Server {
 
@@ -17,30 +18,16 @@ public class Server {
 
     public void run() {
         Javalin app = Javalin.create(config -> {
-            //JavalinThymeleaf.init();
+            JavalinThymeleaf.init();
             config.plugins.enableCors(corsContainer -> {
                 corsContainer.add(CorsPluginConfig::anyHost);
             });
-            //config.staticFiles.add("/public/static");
+            config.staticFiles.add("/public/static");
         });
 
         //API endpoints
 
         app.start(5000);
-
-        app.get(apiPrefix + "/news?category={category}", ctx -> {
-            System.out.println(ctx.pathParam("category"));
-            if(articleManager.numberOfArticles() > 0){
-                String json = articleManager.getArticlesAsJsonString(ctx.pathParam("category"));
-                if(json != null) {
-                    ctx.header("Content-type", "application/json").json(json);
-                }else{
-                    throw new NotFoundResponse();
-                }
-            } else {
-                throw new InternalServerErrorResponse();
-            }
-        });
 
         app.get(apiPrefix + "/news", ctx -> {
             String json;
@@ -83,5 +70,16 @@ public class Server {
                 throw new InternalServerErrorResponse();
             }
         });
+
+        //Templates
+
+        app.get("/news", ctx -> {
+            ctx.render("/templates/index.html");
+        });
+
+        app.get("/news/{id}", ctx -> {
+            ctx.render("/templates/news.html");
+        });
+
     }
 }

@@ -15,9 +15,9 @@ public class ImgArticleManager {
     private final HttpClient httpClient;
     private final List<ImgArticle> articles;
 
-    public static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general", "entertainment", "sports" };
-    //public static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general" };
-    private static final int IMAGES_PER_ARTICLE = 5;
+    //public static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general", "entertainment", "sports" };
+    public static final String[] ARTICLES_TO_GET_BY_ARTICLE = { "general", "entertainment" };
+    private static final int IMAGES_PER_ARTICLE = 1;
 
     private static final String TITLE_IMG_SIZE = "256x256";
     private static final String OTHER_IMGS_SIZE = "256x256";
