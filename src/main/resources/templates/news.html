@@ -31,15 +31,15 @@
                 <div class="row">
 
                     <div class="col-2">
-                        <img src="bild.png" class="newsPic">
+                        <img src="" id = "newsImg" class="newsPic">
                     </div>
 
                     <div class="col-2">
-                        <img src="bild.png" class="newsPic">
+                        <img src="" id="newsImg2" class="newsPic">
                     </div>
 
                     <div class="col-2">                     
-                        <img src="bild.png" class="newsPic">
+                        <img src="" id="newsImg3" class="newsPic">
                     </div> 
 
                     <div class="col-6" id="two">
@@ -49,15 +49,15 @@
 
                 <div class="row">
                     <div class="col-2">
-                        <img src="bild.png" class="newsPic">
+                        <img src="" id="newsImg4" class="newsPic">
                     </div>
 
                     <div class="col-2">                      
-                        <img src="bild.png" class="newsPic">
+                        <img src="" id="newsImg5" class="newsPic">
                     </div>
 
                     <div class="col-2">                     
-                        <img src="bild.png" class="newsPic">
+                        <img src="" id="newsImg6" class="newsPic">
                     </div>
                 </div>  
             </div>
@@ -66,6 +66,32 @@
         <section id="footer">
             <p>Footer</p>
         </section>
+
+
+        <script>
+         
+            fetch('http://localhost:5000/api/v1/news')
+              .then(response => response.json())
+              .then(data => {
+                console.log(data);
+                const newsImg = "data:image/png;base64," + data[0].imgData[0];
+                const newsImg2 = "data:image/png;base64," + data[0].imgData[1];
+                const newsImg3 = "data:image/png;base64," + data[0].imgData[2];
+                const newsImg4 = "data:image/png;base64," + data[0].imgData[3];
+                const newsImg5 = "data:image/png;base64," + data[0].imgData[4];
+                const newsImg6 = "data:image/png;base64," + data[0].imgData[5];
+                
+                document.getElementById('newsImg').src = newsImg;
+                document.getElementById('newsImg2').src = newsImg2;
+                document.getElementById('newsImg3').src = newsImg3;
+                document.getElementById('newsImg4').src = newsImg4;
+                document.getElementById('newsImg5').src = newsImg5;
+                document.getElementById('newsImg6').src = newsImg6;
+            
+                
+              });
+          </script>
+        
 
     </body>
 
