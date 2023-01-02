@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7fe0d0fd-ef0e-42e7-8b6b-c8a64f72914b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ImgArticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ImgArticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ImgArticleManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ImgArticleManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +45,10 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\simon\Desktop\Algoritmkurs\Projekt\ImgNews\.idea" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\simon\Desktop\Algoritmkurs\Projekt\ImgNews\src\main\resources\templates" />
+      <recent name="C:\Users\simon\Desktop\Algoritmkurs\Projekt\ImgNews\src\main\resources\public\static" />
     </key>
   </component>
   <component name="RunManager">

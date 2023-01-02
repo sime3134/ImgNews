@@ -107,8 +107,8 @@
               .then(response => response.json())
               .then(data => {
                 console.log(data);
-                const newsImg = data.imgData;
-                document.getElementById('newsImg').innerHTML = newsImg;
+                const newsImg = "data:image/png;base64," + data[0].imgData[0];
+                document.getElementById('newsImg').src = newsImg;
               });
           </script>
         

@@ -1,6 +1,4 @@
 
-W
-'src/main/java/org/example/Launcher.java,8\b\8b9c1d07edc8134ee664a3ce1579f180e58e24ab
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
