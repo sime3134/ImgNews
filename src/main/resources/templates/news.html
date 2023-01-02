@@ -43,7 +43,7 @@
                     </div> 
 
                     <div class="col-6" id="two">
-                        <h2>NYHETSRUBRIK, NYHET 1</h2>
+                        <h2 id ="title"> </h2>
                     </div>
                 </div>
 
@@ -69,11 +69,20 @@
 
 
         <script>
+
+            
          
-            fetch('http://localhost:5000/api/v1/news')
+            fetch('http://localhost:5000/api/v1/news/[[${id}]]')
               .then(response => response.json())
               .then(data => {
                 console.log(data);
+                
+
+                var c = document.getElementsByClassName('newsPic');
+                imgData.forEach(function(count) {
+                    c.append ('<div>' + count + '</div>')
+                })
+               
                 const newsImg = "data:image/png;base64," + data[0].imgData[0];
                 const newsImg2 = "data:image/png;base64," + data[0].imgData[1];
                 const newsImg3 = "data:image/png;base64," + data[0].imgData[2];
