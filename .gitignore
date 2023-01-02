@@ -206,3 +206,5 @@ $RECYCLE.BIN/
 .idea/workspace.xml
 api_keys.txt
 api_keys.txt
+.idea/sonarlint/issuestore/index.pb
+.idea/workspace.xml
