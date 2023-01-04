@@ -11,16 +11,17 @@
 
     <body>
         <header>
-            <a href="/news"><h1>NAMN</h1> </a>
+            <h1> <img src="/static/news.png" id="logo"> NAMN</h1> 
+            <h2> -Your news in pictures</h2>
         </header>
 
         <nav class="navbar navbar-expand-lg" id="nav">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/news">Home</a>              
                  <ul class="navbar-nav me-auto" >
-                    <a class="nav-link ms-5  active" aria-current="page" href=" ">General</a>
-                    <a class="nav-link ms-5" href=" ">Sports</a>
-                    <a class="nav-link ms-5" href=" ">Entertainment</a>
+                    <a class="nav-link ms-5  active" aria-current="page" href="/news?category=general">General</a>
+                    <a class="nav-link ms-5" href="/news?category=sports">Sports</a>
+                    <a class="nav-link ms-5" href="/news?category=entertainment">Entertainment</a>
                  </ul>
             </div>        
         </nav>
