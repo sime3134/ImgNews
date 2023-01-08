@@ -42,7 +42,7 @@ public class OriginalArticle {
     }
 
     public String[] getContentAsArray(int limit) {
-        return content.split("[.,]", limit + 1);
+        return content.split("[.,]");
     }
 
     public OriginalArticleSource getSource() {

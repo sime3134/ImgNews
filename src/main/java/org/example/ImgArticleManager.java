@@ -18,8 +18,7 @@ public class ImgArticleManager {
     private final HttpClient httpClient;
     private final List<ImgArticle> articles;
 
-    //public static final String[] articleToGetByCategory = { "general", "entertainment", "sports" };
-    public final String[] articleToGetByCategory = { "general", "entertainment", "sports"};
+    public static final String[] articleToGetByCategory = { "general", "entertainment", "sports" };
     private final int imgsPerArticle = 1;
     private final String imgSize = "256x256";
 
