@@ -6,6 +6,7 @@ import io.javalin.http.NotFoundResponse;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import io.javalin.rendering.template.JavalinThymeleaf;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,7 +32,7 @@ public class Server {
             config.plugins.enableCors(corsContainer -> {
                 corsContainer.add(CorsPluginConfig::anyHost);
             });
-            config.staticFiles.add("/public");
+            config.staticFiles.add("/public/static");
         });
 
         //API endpoints
@@ -44,38 +45,33 @@ public class Server {
             if(articleManager.numberOfArticles() > 0){
                 if(ctx.queryParam("category") != null){
                     json = articleManager.getArticlesAsJsonString(ctx.queryParam("category"));
-                    if(json != null) {
-                        ctx.header("Content-type", "application/json").json(json);
-                    }else{
+                    if(json == null){
                         throw new NotFoundResponse("Couldn't find the requested category");
                     }
                 }else {
                     json = articleManager.getArticlesAsJsonString();
-                    ctx.header("Content-type", "application/json").json(json);
                 }
             } else {
                 throw new InternalServerErrorResponse();
             }
+            ctx.header("Content-type", "application/json").json(json);
         });
 
         //Serves an article specified with an ID or a NotFoundResponse if not article was found.
         app.get(apiPrefix + "/news/{id}", ctx -> {
             if(articleManager.numberOfArticles() > 0){
-                Integer id = null;
+                Integer id;
                 try {
                     id = Integer.parseInt(ctx.pathParam("id"));
                 }catch(NumberFormatException e){
-                    e.printStackTrace();
+                    throw new InternalServerErrorResponse("Couldn't parse the article ID");
                 }
-                if(id != null) {
-                    String json = articleManager.getArticleByIdAsJsonString(id);
-                    if (json != null) {
-                        ctx.header("Content-type", "application/json").json(json);
-                    } else {
-                        throw new NotFoundResponse("Couldn't find the requested article");
-                    }
-                }else{
-                    throw new InternalServerErrorResponse();
+
+                String json = articleManager.getArticleByIdAsJsonString(id);
+                if (json != null) {
+                    ctx.header("Content-type", "application/json").json(json);
+                } else {
+                    throw new NotFoundResponse("Couldn't find the requested article");
                 }
             } else {
                 throw new InternalServerErrorResponse();
@@ -93,8 +89,9 @@ public class Server {
                     e.printStackTrace();
                 }
                 if(id != null) {
-                    Map<String, String> model = Map.of("json",
-                            articleManager.getArticleByIdAsJsonString(id));
+                    Map<String, String> model = new HashMap<>();
+                    model.put("json", articleManager.getArticleByIdAsJsonString(id));
+                    model.put("numberOfTries", String.valueOf(articleManager.getArticleById(id).getOriginalArticle().getNumberOfTries()));
                     ctx.render("/templates/news.html", model);
                 }else{
                     throw new InternalServerErrorResponse();
@@ -109,14 +106,18 @@ public class Server {
             if(articleManager.numberOfArticles() > 0){
                 if(ctx.queryParam("category") != null){
                     json = articleManager.getArticlesAsJsonString(ctx.queryParam("category"));
+                    if(json == null){
+                        throw new NotFoundResponse("Couldn't find the requested category");
+                    }
                 }else {
                     json = articleManager.getArticlesAsJsonString();
                 }
             } else {
                 throw new InternalServerErrorResponse();
             }
-            Map<String, String> model = Map.of("json",
-                    json);
+            Map<String, String> model = new HashMap<>();
+            model.put("json", json);
+            model.put("numberOfTries", String.valueOf(articleManager.getTotalNumberofTries()));
             ctx.render("/templates/index.html", model);
         });
     }

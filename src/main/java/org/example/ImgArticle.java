@@ -9,8 +9,9 @@ import java.util.List;
 public class ImgArticle {
     private static int nextId;
     private final int id;
-    private List<String> imgData;
     private OriginalArticle originalArticle;
+
+    private List<String> imgData;
 
     public OriginalArticle getOriginalArticle() {
         return originalArticle;
