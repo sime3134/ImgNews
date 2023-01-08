@@ -93,6 +93,11 @@ a:hover {
     width: 170px;
 }
 
+.newsPic:hover{
+    transform: scale(1.5);
+    transition: transform 0.5s;
+}
+
 #footer {
     border-top: 1px rgba(0, 66, 128, 0.384) solid;
     margin: 0;

@@ -118,6 +118,7 @@ public class Server {
             Map<String, String> model = new HashMap<>();
             model.put("json", json);
             model.put("numberOfTries", String.valueOf(articleManager.getTotalNumberofTries()));
+            model.put("generatedArticles", String.valueOf(articleManager.numberOfArticles()));
             ctx.render("/templates/index.html", model);
         });
     }
