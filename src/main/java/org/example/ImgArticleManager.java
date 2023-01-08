@@ -55,7 +55,11 @@ public class ImgArticleManager {
     private List<GeneratedImage> getGeneratedImages(OriginalArticle originalArticle) {
         ArrayList<GeneratedImage> images = new ArrayList<>();
         String[] contents = originalArticle.getContentAsArray(imgsPerArticle);
-        images.add(getImageFromDalle(originalArticle.getTitle()));
+        GeneratedImage titleImg = getImageFromDalle(originalArticle.getTitle());
+
+        if(titleImg == null) return null;
+        else images.add(titleImg);
+
         for (String content : contents) {
             GeneratedImage img = getImageFromDalle(content);
             if(img != null)  images.add(img);
