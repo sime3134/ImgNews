@@ -18,8 +18,8 @@ public class ImgArticleManager {
     private final HttpClient httpClient;
     private final List<ImgArticle> articles;
 
-    public static final String[] articleToGetByCategory = { "general"};
-    private final int imgsPerArticle = 1;
+    public static final String[] articleToGetByCategory = { "general", "sports", "entertainment"};
+    private final int imgsPerArticle = 5;
     private final String imgSize = "256x256";
 
     private int totalNumberofTries;
@@ -44,7 +44,7 @@ public class ImgArticleManager {
         if(images != null) {
             articles.add(createImgArticle(originalArticle, images));
         }else{
-            generateArticle(category, startIndex+1);
+            generateArticle(category, originalArticle.getIndex()+1);
         }
     }
 
@@ -103,7 +103,7 @@ public class ImgArticleManager {
      * See {@link #checkArticleWithDalle(OriginalArticle)} for details about this.
      *
      * @param category   The category of the article to retrieve.
-     * @param startIndex
+     * @param startIndex The index to start grabbing articles from.
      * @return The retrieved article.
      */
     private OriginalArticle getNews(String category, int startIndex) {
@@ -129,9 +129,10 @@ public class ImgArticleManager {
             articleIndex++;
             totalNumberofTries++;
             numberOfTriesThisArticle++;
-            if(responseObj.getArticle(articleIndex).getContent() == null) continue;
+            if(exists(responseObj.getArticle(articleIndex).getTitle()) || responseObj.getArticle(articleIndex).getContent() == null) continue;
             if(responseObj.getNumberOfArticles() > articleIndex) {
                 article = responseObj.getArticle(articleIndex);
+                article.setIndex(articleIndex);
                 System.out.println("Checking article: " + article.getTitle());
                 blacklisted = checkArticleWithDalle(article);
             }else{
@@ -164,10 +165,21 @@ public class ImgArticleManager {
             e.printStackTrace();
         }
 
-        DalleCompletionResponse dalleCompletionResponse = mapper.fromJsonString(json, DalleCompletionResponse.class);
-        System.out.println("Contains names of public figures or violent content? Dalle says:"
-                + dalleCompletionResponse.getChoice().getText() + "\n");
-        return !dalleCompletionResponse.getChoice().getText().contains("No, ");
+        if(json != null) {
+            DalleCompletionResponse dalleCompletionResponse = mapper.fromJsonString(json, DalleCompletionResponse.class);
+            System.out.println("Contains names of public figures or violent content? Dalle says:"
+                    + dalleCompletionResponse.getChoice().getText() + "\n");
+            return !dalleCompletionResponse.getChoice().getText().contains("No, ");
+        }else{
+            return true;
+        }
+    }
+
+    public boolean exists(String title){
+        for(ImgArticle article : articles){
+            if(article.getOriginalArticle().getTitle().equals(title)) return true;
+        }
+        return false;
     }
 
     public int getTotalNumberofTries() {
