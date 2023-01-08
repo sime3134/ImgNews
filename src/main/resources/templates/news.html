@@ -26,6 +26,14 @@
             </div>        
         </nav>
 
+        <section>
+            <div class="container text-right">
+                <p id="numberOfTries">
+                    Number of tries:
+                </p>
+            </div>
+        </section>
+
         <section id="news">
             <div class="container text-center">
                 <div class="row">
@@ -84,8 +92,14 @@
             let articleDescscription = data.originalArticle.description;
             document.getElementById('article').innerHTML = articleDescscription; 
 
+            let articleContent= data.originalArticle.content;
+            document.getElementById('article').innerHTML = articleContent; 
+
             let title = data.originalArticle.title;
             document.getElementById('title').innerHTML = title;
+
+            let numberOfTries = [(${numberOfTries})];
+            document.getElementById('numberOfTries').innerHTML = numberOfTries;
 
         </script>
 
