@@ -19,7 +19,7 @@ public class ImgArticleManager {
     private final List<ImgArticle> articles;
 
     public static final String[] articleToGetByCategory = { "general", "entertainment", "sports" };
-    private final int imgsPerArticle = 1;
+    private final int imgsPerArticle = 5;
     private final String imgSize = "256x256";
 
     private int totalNumberofTries;
