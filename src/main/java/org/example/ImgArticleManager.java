@@ -23,11 +23,14 @@ public class ImgArticleManager {
     private final int imgsPerArticle = 1;
     private final String imgSize = "256x256";
 
+    private int totalNumberofTries;
+
     public ImgArticleManager(){
         articles = new ArrayList<>();
         mapper = new Mapper();
         keyHandler = new KeyHandler();
         httpClient = new HttpClient();
+        totalNumberofTries = 0;
     }
 
     public void prepareArticles() {
@@ -104,9 +107,12 @@ public class ImgArticleManager {
         }
 
         NewsResponse responseObj = mapper.fromJsonString(json, NewsResponse.class);
+        int numberOfTriesThisArticle = 0;
         boolean blacklisted = true;
         while(blacklisted){
             articleIndex++;
+            totalNumberofTries++;
+            numberOfTriesThisArticle++;
             if(responseObj.getArticle(articleIndex).getContent() == null) continue;
             if(responseObj.getNumberOfArticles() > articleIndex) {
                 article = responseObj.getArticle(articleIndex);
@@ -117,7 +123,7 @@ public class ImgArticleManager {
             }
         }
 
-        return article.setCategory(category);
+        return article.setCategory(category).setNumberOfTries(numberOfTriesThisArticle);
     }
 
     /**
@@ -148,10 +154,17 @@ public class ImgArticleManager {
         return !dalleCompletionResponse.getChoice().getText().contains("No, ");
     }
 
-
+    public int getTotalNumberofTries() {
+        return totalNumberofTries;
+    }
 
     public String getArticlesAsJsonString() {
         return mapper.toJsonString(articles, List.class);
+    }
+
+    public ImgArticle getArticleById(int id) {
+        Optional<ImgArticle> article = articles.stream().filter(art -> art.getId() == id).findAny();
+        return article.orElse(null);
     }
 
     public String getArticleByIdAsJsonString(int id) {

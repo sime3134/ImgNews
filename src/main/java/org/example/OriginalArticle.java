@@ -11,6 +11,7 @@ public class OriginalArticle {
     private String content;
     private String category;
     private OriginalArticleSource source;
+    private int numberOfTries;
     public String getTitle() {
         return title;
     }
@@ -46,6 +47,15 @@ public class OriginalArticle {
 
     public OriginalArticleSource getSource() {
         return source;
+    }
+
+    public int getNumberOfTries() {
+        return numberOfTries;
+    }
+
+    public OriginalArticle setNumberOfTries(int numberOfTries) {
+        this.numberOfTries = numberOfTries;
+        return this;
     }
 
     @Override
