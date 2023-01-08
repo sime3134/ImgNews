@@ -19,14 +19,14 @@
 
         <nav class="navbar navbar-expand-lg" id="nav">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/news"><i class="fa-solid fa-house"></i> Home </a>
+                <a class="navbar-brand" href="/news"><i id="home" class="fa-solid fa-house"></i> Home </a>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">            
                     <ul class="navbar-nav me-auto">
-                        <a class="nav-link ms-5" id="general" href="news?category=general"><i
+                        <a class="nav-link ms-5" href="news?category=general"><i id="general"
                                 class="fa-solid fa-newspaper"></i> General</a>
-                        <a class="nav-link ms-5" id="sports" href="news?category=sports"><i
+                        <a class="nav-link ms-5" href="news?category=sports"><i id="sports"
                                 class="fa-solid fa-football"></i> Sports</a>
-                        <a class="nav-link ms-5" id="entertainment" href="news?category=entertainment"><i
+                        <a class="nav-link ms-5" href="news?category=entertainment"><i id="entertainment"
                                 class="fa-solid fa-masks-theater"></i> Entertainment</a>
                     </ul>
                 </div>
@@ -61,7 +61,16 @@
         <script>
 
             let data = [(${json})];
+            let category = "[(${category})]";
             console.log(data)
+
+            let activeLink = document.getElementById(category);
+
+            if (activeLink) {
+                activeLink.classList.add("active");
+            }else{
+                document.getElementById("home").classList.add("active");
+            }
             
             for (let i = 0; i < Object.keys(data).length; i++){
                 var div = document.createElement('div');

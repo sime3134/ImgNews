@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7fe0d0fd-ef0e-42e7-8b6b-c8a64f72914b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ImgArticleManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ImgArticleManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/public/static/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/news.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/news.html" afterDir="false" />
     </list>
