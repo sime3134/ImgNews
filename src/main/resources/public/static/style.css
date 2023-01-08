@@ -86,7 +86,7 @@ i.active {
 
 #news {
     margin-top: 5%;
-    margin-bottom: 5%;
+    margin-bottom: 0;
 }
 
 #start0, #start1
@@ -121,11 +121,11 @@ i.active {
 }
 
 
-#articleButton {
+#articleButton, #infoButton {
     font-family: 'Raleway', sans-serif;
     background-color:rgba(255, 166, 0, 0.685) ; 
     border:rgba(255, 166, 0, 0.685) ;
-    
-
-
+}
+#infoRow {
+    padding-bottom: 5px;
 }
