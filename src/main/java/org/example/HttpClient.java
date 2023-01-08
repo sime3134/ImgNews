@@ -14,12 +14,16 @@ public class HttpClient {
         client = new OkHttpClient();
     }
 
-    public String get(Request request) throws IOException {
+    public String get(Request request) {
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
             return response.body().string();
+        }catch (IOException e) {
+            e.printStackTrace();
         }
+
+        return null;
     }
 
     public String post(Request request){

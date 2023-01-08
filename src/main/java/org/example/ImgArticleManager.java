@@ -34,17 +34,17 @@ public class ImgArticleManager {
 
     public void prepareArticles() {
         for(String category : articleToGetByCategory){
-            generateArticle(category, 0);
+            generateArticle(category, 0, 0);
         }
     }
 
-    private void generateArticle(String category, int startIndex){
-        OriginalArticle originalArticle = getNews(category, startIndex);
+    private void generateArticle(String category, int startIndex, int startNumberOfTries){
+        OriginalArticle originalArticle = getNews(category, startIndex, startNumberOfTries);
         List<GeneratedImage> images = getGeneratedImages(originalArticle);
         if(images != null) {
             articles.add(createImgArticle(originalArticle, images));
         }else{
-            generateArticle(category, originalArticle.getIndex()+1);
+            generateArticle(category, originalArticle.getIndex()+1, originalArticle.getNumberOfTries());
         }
     }
 
@@ -86,11 +86,8 @@ public class ImgArticleManager {
                 .addHeader("Content-Type", "application/json")
                 .post(RequestBody.create(jsonRequest, MediaType.get("application/json; charset=utf-8")))
                 .build();
-        try{
-            json = httpClient.post(request);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+
+        json = httpClient.post(request);
 
         if(json != null) {
             DalleImageResponse dalleImageResponse = mapper.fromJsonString(json, DalleImageResponse.class);
@@ -106,11 +103,12 @@ public class ImgArticleManager {
      * related to violence, celebrities or COVID-19 a new article will be retrieved.
      * See {@link #checkArticleWithDalle(OriginalArticle)} for details about this.
      *
-     * @param category   The category of the article to retrieve.
-     * @param startIndex The index to start grabbing articles from.
+     * @param category           The category of the article to retrieve.
+     * @param startIndex         The index to start grabbing articles from.
+     * @param startNumberOfTries
      * @return The retrieved article.
      */
-    private OriginalArticle getNews(String category, int startIndex) {
+    private OriginalArticle getNews(String category, int startIndex, int startNumberOfTries) {
         int articleIndex = startIndex - 1;
         OriginalArticle article = null;
         String json = "";
@@ -120,19 +118,20 @@ public class ImgArticleManager {
                 .addHeader("Accept", "application/json")
                 .addHeader("X-Api-Key", keyHandler.get("newsapi"))
                 .build();
-        try {
-            json = httpClient.get(request);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        json = httpClient.get(request);
+
+        if(json == null){
+            getNews(category, startIndex, startNumberOfTries);
         }
 
         NewsResponse responseObj = mapper.fromJsonString(json, NewsResponse.class);
-        int numberOfTriesThisArticle = 0;
+        int numberOfTriesThisBatch = startNumberOfTries;
         boolean blacklisted = true;
         while(blacklisted){
             articleIndex++;
             totalNumberofTries++;
-            numberOfTriesThisArticle++;
+            numberOfTriesThisBatch++;
             if(exists(responseObj.getArticle(articleIndex).getTitle()) || responseObj.getArticle(articleIndex).getContent() == null) continue;
             if(responseObj.getNumberOfArticles() > articleIndex) {
                 article = responseObj.getArticle(articleIndex);
@@ -140,11 +139,11 @@ public class ImgArticleManager {
                 System.out.println("Checking article: " + article.getTitle());
                 blacklisted = checkArticleWithDalle(article);
             }else{
-                getNews(category, startIndex);
+                getNews(category, startIndex, numberOfTriesThisBatch);
             }
         }
 
-        return article.setCategory(category).setNumberOfTries(numberOfTriesThisArticle);
+        return article.setCategory(category).setNumberOfTries(numberOfTriesThisBatch);
     }
 
     /**
