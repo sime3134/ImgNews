@@ -64,9 +64,15 @@ nav {
 }
 
 a:hover {
-    color: black;
+    color: orange;
     text-shadow: 1px 1px 2px rgba(24, 24, 24, 0.278);
 }
+
+a: active {
+    color: orange;
+    text-shadow: 1px 1px 2px rgba(24, 24, 24, 0.278);
+}
+
 #news {
     margin-top: 5%;
     margin-bottom: 5%;
@@ -102,3 +108,8 @@ a:hover {
     border-top: 1px rgba(0, 66, 128, 0.384) solid;
     margin: 0;
 }
+
+.fa-house{
+    font-size: 24px;
+}
+

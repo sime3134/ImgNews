@@ -103,8 +103,10 @@ public class Server {
 
         app.get("/news", ctx -> {
             String json;
+            String category = "empty";
             if(articleManager.numberOfArticles() > 0){
                 if(ctx.queryParam("category") != null){
+                    category = ctx.queryParam("category");
                     json = articleManager.getArticlesAsJsonString(ctx.queryParam("category"));
                     if(json == null){
                         throw new NotFoundResponse("Couldn't find the requested category");
@@ -119,6 +121,7 @@ public class Server {
             model.put("json", json);
             model.put("numberOfTries", String.valueOf(articleManager.getTotalNumberofTries()));
             model.put("generatedArticles", String.valueOf(articleManager.numberOfArticles()));
+            model.put("category", category);
             ctx.render("/templates/index.html", model);
         });
     }

@@ -18,7 +18,7 @@ public class ImgArticleManager {
     private final HttpClient httpClient;
     private final List<ImgArticle> articles;
 
-    public static final String[] articleToGetByCategory = { "general", "sports", "entertainment" };
+    public static final String[] articleToGetByCategory = { "general"};
     private final int imgsPerArticle = 5;
     private final String imgSize = "256x256";
 
@@ -34,12 +34,21 @@ public class ImgArticleManager {
 
     public void prepareArticles() {
         for(String category : articleToGetByCategory){
-            OriginalArticle originalArticle = getNews(category);
-            articles.add(createImgArticles(originalArticle, getGeneratedImages(originalArticle)));
+            generateArticle(category, 0);
         }
     }
 
-    private ImgArticle createImgArticles(OriginalArticle originalArticle, List<GeneratedImage> generatedImages) {
+    private void generateArticle(String category, int startIndex){
+        OriginalArticle originalArticle = getNews(category, startIndex);
+        List<GeneratedImage> images = getGeneratedImages(originalArticle);
+        if(images != null) {
+            articles.add(createImgArticle(originalArticle, images));
+        }else{
+            generateArticle(category, startIndex+1);
+        }
+    }
+
+    private ImgArticle createImgArticle(OriginalArticle originalArticle, List<GeneratedImage> generatedImages) {
         return new ImgArticle(originalArticle, generatedImages);
     }
 
@@ -48,7 +57,9 @@ public class ImgArticleManager {
         String[] contents = originalArticle.getContentAsArray(imgsPerArticle);
         images.add(getImageFromDalle(originalArticle.getTitle()));
         for (String content : contents) {
-            images.add(getImageFromDalle(content));
+            GeneratedImage img = getImageFromDalle(content);
+            if(img != null)  images.add(img);
+            else return null;
         }
 
         return images;
@@ -77,20 +88,26 @@ public class ImgArticleManager {
             e.printStackTrace();
         }
 
-        DalleImageResponse dalleImageResponse = mapper.fromJsonString(json, DalleImageResponse.class);
+        if(json != null) {
+            DalleImageResponse dalleImageResponse = mapper.fromJsonString(json, DalleImageResponse.class);
 
-        return dalleImageResponse.getData()[0];
+            return dalleImageResponse.getData()[0];
+        }
+
+        return null;
     }
 
     /**
      * Requests 1 article from the NEWS API. If a retrieved article contains anything
      * related to violence, celebrities or COVID-19 a new article will be retrieved.
      * See {@link #checkArticleWithDalle(OriginalArticle)} for details about this.
-     * @param category The category of the article to retrieve.
+     *
+     * @param category   The category of the article to retrieve.
+     * @param startIndex
      * @return The retrieved article.
      */
-    private OriginalArticle getNews(String category) {
-        int articleIndex = -1;
+    private OriginalArticle getNews(String category, int startIndex) {
+        int articleIndex = startIndex - 1;
         OriginalArticle article = null;
         String json = "";
 
@@ -118,7 +135,7 @@ public class ImgArticleManager {
                 System.out.println("Checking article: " + article.getTitle());
                 blacklisted = checkArticleWithDalle(article);
             }else{
-                getNews(category);
+                getNews(category, startIndex);
             }
         }
 
