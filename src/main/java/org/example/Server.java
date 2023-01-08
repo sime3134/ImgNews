@@ -37,7 +37,7 @@ public class Server {
 
         //API endpoints
 
-        app.start(5000);
+        app.start(5001);
 
         //Serves all news or all news for a specific category if it is specified in a query.
         app.get(apiPrefix + "/news", ctx -> {
