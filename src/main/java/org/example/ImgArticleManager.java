@@ -32,15 +32,27 @@ public class ImgArticleManager {
         totalNumberofTries = 0;
     }
 
+    /**
+     * Prepares 1 article per category.
+     */
     public void prepareArticles() {
         for(String category : articleToGetByCategory){
             generateArticle(category, 0, 0);
         }
     }
 
+    /**
+     * Generates an article with the given category.
+     * Will recursively call itself if the article is not valid.
+     * @param category The category to query for.
+     * @param startIndex The index to start at when going through the articles looking for a valid one.
+     * @param startNumberOfTries The number of tries to start at when going through the articles looking for a
+     *                           valid one. Only for analyzing.
+     */
     private void generateArticle(String category, int startIndex, int startNumberOfTries){
         OriginalArticle originalArticle = getNews(category, startIndex, startNumberOfTries);
         List<GeneratedImage> images = getGeneratedImages(originalArticle);
+        //If any of the images could not be generated, try again.
         if(images != null) {
             articles.add(createImgArticle(originalArticle, images));
         }else{
@@ -52,14 +64,21 @@ public class ImgArticleManager {
         return new ImgArticle(originalArticle, generatedImages);
     }
 
+    /**
+     * Creates a list of generated images from the OpenAI API.
+     * @param originalArticle The article to generate images from.
+     * @return List of the generated images or null if any of the images could not be generated.
+     */
     private List<GeneratedImage> getGeneratedImages(OriginalArticle originalArticle) {
         ArrayList<GeneratedImage> images = new ArrayList<>();
         String[] contents = originalArticle.getContentAsArray(imgsPerArticle);
         GeneratedImage titleImg = getImageFromDalle(originalArticle.getTitle());
 
+        //If title image could not be generated, return null.
         if(titleImg == null) return null;
         else images.add(titleImg);
 
+        //If any content images could not be generated, return null.
         for (String content : contents) {
             GeneratedImage img = getImageFromDalle(content);
             if(img != null)  images.add(img);
@@ -72,7 +91,7 @@ public class ImgArticleManager {
     /**
      * Requests 1 image from the OPENAI API.
      * @param searchPrompt The text prompt to generate the image from.
-     * @return The generated image.
+     * @return The generated image or null if request fails.
      */
     private GeneratedImage getImageFromDalle(String searchPrompt) {
         String json = "";
@@ -101,11 +120,12 @@ public class ImgArticleManager {
     /**
      * Requests 1 article from the NEWS API. If a retrieved article contains anything
      * related to violence, celebrities or COVID-19 a new article will be retrieved.
-     * See {@link #checkArticleWithDalle(OriginalArticle)} for details about this.
+     * See {@link #articleContainsBadContent(OriginalArticle)} for details about this.
      *
      * @param category           The category of the article to retrieve.
      * @param startIndex         The index to start grabbing articles from.
-     * @param startNumberOfTries
+     * @param startNumberOfTries The number of tries to start at when going through the articles looking for a
+     *                           valid one. Only for analyzing.
      * @return The retrieved article.
      */
     private OriginalArticle getNews(String category, int startIndex, int startNumberOfTries) {
@@ -137,7 +157,7 @@ public class ImgArticleManager {
                 article = responseObj.getArticle(articleIndex);
                 article.setIndex(articleIndex);
                 System.out.println("Checking article: " + article.getTitle());
-                blacklisted = checkArticleWithDalle(article);
+                blacklisted = articleContainsBadContent(article);
             }else{
                 getNews(category, startIndex, numberOfTriesThisBatch);
             }
@@ -149,9 +169,10 @@ public class ImgArticleManager {
     /**
      * Asks the OPENAI API if the article contains anything related to violence, celebrities or COVID-19.
      * @param article The article to check.
-     * @return true if the article contains anything related to violence, celebrities or COVID-19, else false.
+     * @return true if the article contains anything related to violence, celebrities covid-19 or if the request
+     * failed. Otherwise, false.
      */
-    private boolean checkArticleWithDalle(OriginalArticle article) {
+    private boolean articleContainsBadContent(OriginalArticle article) {
         String json = "";
         DalleCompletionPrompt dalleCompletionPrompt = new DalleCompletionPrompt(article);
         String jsonRequest = mapper.toJsonString(dalleCompletionPrompt, DalleCompletionPrompt.class);
