@@ -11,8 +11,7 @@
    - https://beta.openai.com
 5. Fyll i nycklarna i filen du precis skapade enligt följande format (byt ut "nyckel" mot din nyckel):
    
-   openai="nyckel"
-
+   openai="nyckel"                                                                                                                                                      
    newsapi="nyckel"
 
 6. Hur du startar själva programmet kan variera sig mellan operativsystem men generellt sett vill du gå in i 
