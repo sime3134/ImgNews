@@ -10,6 +10,7 @@
    - https://newsapi.org/
    - https://beta.openai.com
 5. Fyll i nycklarna i filen du precis skapade enligt följande format (byt ut "nyckel" mot din nyckel):
+   
    openai="nyckel"
    newsapi="nyckel"
 
