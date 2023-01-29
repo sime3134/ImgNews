@@ -10,12 +10,12 @@
    - https://newsapi.org/
    - https://beta.openai.com
 5. Fyll i nycklarna i filen du precis skapade enligt följande format (byt ut "nyckel" mot din nyckel):
-   
+
    openai="nyckel"                                                                                                                                                      
    newsapi="nyckel"
 
 6. Hur du startar själva programmet kan variera sig mellan operativsystem men generellt sett vill du gå in i 
-   klassen "Launcher" och köra main-metoden därifrån. 
+   klassen "Launcher" och köra main-metoden därifrån genom att klicka på den gröna "play"-knappen brevid main-klassen. Ett annat alterantiv är att högerklicka på klassen "Launcher" i projektvyn och sedan välja "Run Launcher.main()". 
 7. Servern tar nu en stund på sig att generera artiklar. När du får något liknande “[main] INFO io.javalin.
    Javalin - Javalin started in 244ms \o/” i konsollen så är servern redo. Notera att ett antal "Exceptions" 
    kan uppstå medan programmet skapar artiklar, detta är helt normalt och inget att bekymra sig över.
