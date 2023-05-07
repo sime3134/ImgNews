@@ -1,4 +1,4 @@
-# ImgNews
+# ImgNews - Course project
 
 ## Instruktioner
 1. Börja med att ladda ner eller klona projektet från GitHub.
